@@ -6,16 +6,20 @@ st.set_page_config(page_title="L'Écho", page_icon="🧡")
 st.title("🧡 L'Écho")
 st.subheader("Le miroir qui transforme ta journée en force.")
 
-with st.sidebar:
-    st.write("### Configuration")
-    api_key = st.text_input("Clé API OpenAI", type="password")
+# 1. On cherche la clé dans le coffre-fort (Secrets)
+try:
+    api_key = st.secrets["OPENAI_API_KEY"]
+except:
+    # Si on ne la trouve pas (ex: sur ton ordi), on la demande
+    with st.sidebar:
+        api_key = st.text_input("Clé API OpenAI", type="password")
 
 st.write("Raconte-moi ta journée...")
 user_input = st.text_area("Journal", height=150)
 
 if st.button("✨ Recevoir ma dose d'amour"):
     if not api_key:
-        st.warning("Il manque la clé API dans le menu à gauche !")
+        st.warning("Je n'ai pas trouvé la Clé magique !")
     elif not user_input:
         st.warning("Écris quelque chose d'abord !")
     else:
