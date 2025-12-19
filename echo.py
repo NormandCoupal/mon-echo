@@ -37,7 +37,7 @@ hide_streamlit_style = """
 
             /* LA CITATION */
             h2 {
-                font-size: 1.2rem !important; 
+                font-size: 1.5rem !important; 
                 font-weight: 400 !important;
                 margin-top: 0.5rem !important;
             }
@@ -73,7 +73,7 @@ except:
     api_key = st.sidebar.text_input("Clé API", type="password")
 
 # --- 5. AFFICHAGE DU NOUVEAU TITRE ---
-st.title(f"{coeur_du_jour} L'Écho de ton coeur")
+st.title(f"{coeur_du_jour} L'Écho de ton Coeur")
 
 if api_key:
     pensee = generer_pensee_du_jour(datetime.date.today(), api_key)
@@ -110,4 +110,5 @@ if st.button("💌 Recevoir ma réponse"):
                 st.success(response.choices[0].message.content)
         except Exception as e:
             st.error(f"Erreur : {e}")
+
 
