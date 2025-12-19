@@ -2,7 +2,15 @@ import streamlit as st
 from openai import OpenAI
 
 st.set_page_config(page_title="L'Écho", page_icon="🧡")
-
+# Code pour tout nettoyer (enlever le menu et le pied de page)
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.title("🧡 L'Écho")
 st.subheader("Le miroir qui transforme ta journée en force.")
 
@@ -40,3 +48,4 @@ if st.button("✨ Recevoir ma dose d'amour"):
                 st.balloons()
         except Exception as e:
             st.error(f"Erreur : {e}")
+
