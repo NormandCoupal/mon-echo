@@ -2,28 +2,29 @@ import streamlit as st
 from openai import OpenAI
 import datetime
 
-# --- 1. CHOIX DE L'ICÔNE DU JOUR ---
+# --- 1. CONFIGURATION ---
 liste_emojis = ["🧡", "🌟", "🌿", "☀️", "🌊", "🌸", "🕊️", "💎", "🔥", "🪐"]
 jour_actuel = datetime.date.today().toordinal()
 icone_du_jour = liste_emojis[jour_actuel % len(liste_emojis)]
 
-# --- CONFIGURATION DE LA PAGE ---
 st.set_page_config(page_title="L'Écho", page_icon=icone_du_jour)
 
-# --- LE CODE "INVISIBLE" (MISE À JOUR) ---
-# C'est ici que ça se joue : on cache la barre d'outils (Toolbar) et le bouton Deploy
+# --- 2. LE CODE INVISIBLE (VERSION FORTE) ---
+# On utilise "display: none" pour que les éléments n'existent plus du tout
 hide_streamlit_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
-            [data-testid="stToolbar"] {visibility: hidden !important;}
-            .stDeployButton {display:none;}
+            [data-testid="stToolbar"] {display: none !important;}
+            .stDeployButton {display: none !important;}
+            [data-testid="stDecoration"] {display: none !important;}
+            [data-testid="stStatusWidget"] {display: none !important;}
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-# --- FONCTION INTELLIGENTE ---
+# --- 3. FONCTION IA ---
 @st.cache_data(ttl=3600*24) 
 def generer_pensee_du_jour(date_du_jour, api_key):
     try:
@@ -39,13 +40,13 @@ def generer_pensee_du_jour(date_du_jour, api_key):
     except:
         return "Chaque jour est une nouvelle chance."
 
-# --- RÉCUPÉRATION CLÉ ---
+# --- 4. CLÉ API ---
 try:
     api_key = st.secrets["OPENAI_API_KEY"]
 except:
     api_key = st.sidebar.text_input("Clé API", type="password")
 
-# --- AFFICHAGE ---
+# --- 5. AFFICHAGE ---
 st.title(f"{icone_du_jour} L'Écho")
 
 if api_key:
@@ -56,26 +57,26 @@ else:
 
 st.write("---") 
 
-# --- JOURNAL ---
+# --- 6. JOURNAL ---
 st.write("Comment te sens-tu aujourd'hui ?")
 user_input = st.text_area("Ton espace", height=150, placeholder="Je me sens...")
 
 if st.button("💌 Recevoir ma réponse"):
     if not api_key:
-        st.warning("Je ne trouve pas la clé magique...")
+        st.warning("Clé manquante...")
     elif not user_input:
         st.warning("Le silence est d'or, mais j'ai besoin de mots.")
     else:
         try:
             client = OpenAI(api_key=api_key)
-            with st.spinner('Analyse émotionnelle...'):
+            with st.spinner('Je t\'écoute...'):
                 prompt = f"""
                 Agis comme un ami sage (L'Écho).
                 L'utilisateur dit : "{user_input}"
                 1. Analyse l'émotion.
-                2. Choisis un emoji unique qui correspond le mieux à cette émotion.
+                2. Choisis un emoji unique qui correspond.
                 3. Commence ta réponse par cet emoji.
-                4. Donne une réponse bienveillante et brève (3 phrases max).
+                4. Réponds avec bienveillance (3 phrases max).
                 """
                 response = client.chat.completions.create(
                     model="gpt-3.5-turbo",
