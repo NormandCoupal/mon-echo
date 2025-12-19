@@ -2,15 +2,17 @@ import streamlit as st
 from openai import OpenAI
 import datetime
 
-# --- 1. CONFIGURATION ---
-liste_emojis = ["🧡", "🌟", "🌿", "☀️", "🌊", "🌸", "🕊️", "💎", "🔥", "🪐"]
+# --- 1. CONFIGURATION ET PALETTE DE CŒURS ---
+# On remplace les objets par une variété de cœurs
+liste_coeurs = ["🧡", "❤️", "💖", "💗", "💓", "💝", "🤍", "❤️‍🔥", "💟"]
 jour_actuel = datetime.date.today().toordinal()
-icone_du_jour = liste_emojis[jour_actuel % len(liste_emojis)]
 
-st.set_page_config(page_title="L'Écho", page_icon=icone_du_jour)
+# Le cœur change chaque jour, mais reste toujours un cœur
+coeur_du_jour = liste_coeurs[jour_actuel % len(liste_coeurs)]
 
-# --- 2. LE CODE INVISIBLE (VERSION FORTE) ---
-# On utilise "display: none" pour que les éléments n'existent plus du tout
+st.set_page_config(page_title="L'Écho", page_icon=coeur_du_jour)
+
+# --- 2. LE CODE INVISIBLE (NETTOYAGE) ---
 hide_streamlit_style = """
             <style>
             #MainMenu {visibility: hidden;}
@@ -46,8 +48,9 @@ try:
 except:
     api_key = st.sidebar.text_input("Clé API", type="password")
 
-# --- 5. AFFICHAGE ---
-st.title(f"{icone_du_jour} L'Écho")
+# --- 5. AFFICHAGE PRINCIPAL ---
+# On affiche le cœur du jour en grand
+st.title(f"{coeur_du_jour} L'Écho")
 
 if api_key:
     pensee = generer_pensee_du_jour(datetime.date.today(), api_key)
@@ -57,10 +60,11 @@ else:
 
 st.write("---") 
 
-# --- 6. JOURNAL ---
+# --- 6. JOURNAL INTELLIGENT ---
 st.write("Comment te sens-tu aujourd'hui ?")
 user_input = st.text_area("Ton espace", height=150, placeholder="Je me sens...")
 
+# C'est ici que l'icône va changer selon l'humeur DANS la réponse
 if st.button("💌 Recevoir ma réponse"):
     if not api_key:
         st.warning("Clé manquante...")
@@ -74,7 +78,7 @@ if st.button("💌 Recevoir ma réponse"):
                 Agis comme un ami sage (L'Écho).
                 L'utilisateur dit : "{user_input}"
                 1. Analyse l'émotion.
-                2. Choisis un emoji unique qui correspond.
+                2. Choisis un emoji qui correspond (par exemple 🌤️ si espoir, 🌧️ si triste, 🎉 si joie).
                 3. Commence ta réponse par cet emoji.
                 4. Réponds avec bienveillance (3 phrases max).
                 """
@@ -82,6 +86,7 @@ if st.button("💌 Recevoir ma réponse"):
                     model="gpt-3.5-turbo",
                     messages=[{"role": "user", "content": prompt}]
                 )
+                # On affiche la réponse
                 st.success(response.choices[0].message.content)
                 st.balloons()
         except Exception as e:
