@@ -8,7 +8,7 @@ jour_actuel = datetime.date.today().toordinal()
 coeur_du_jour = liste_coeurs[jour_actuel % len(liste_coeurs)]
 
 # Changement du nom dans l'onglet du navigateur
-st.set_page_config(page_title="L'Écho de ton coeur", page_icon=coeur_du_jour)
+st.set_page_config(page_title="L'Écho de ton Coeur", page_icon=coeur_du_jour)
 
 # --- 2. LE STYLE (CSS) ---
 hide_streamlit_style = """
@@ -110,3 +110,4 @@ if st.button("💌 Recevoir ma réponse"):
                 st.success(response.choices[0].message.content)
         except Exception as e:
             st.error(f"Erreur : {e}")
+
