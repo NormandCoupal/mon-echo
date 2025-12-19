@@ -9,11 +9,10 @@ coeur_du_jour = liste_coeurs[jour_actuel % len(liste_coeurs)]
 
 st.set_page_config(page_title="L'Écho", page_icon=coeur_du_jour)
 
-# --- 2. LE STYLE (CSS) POUR RÉDUIRE LES TAILLES ---
-# C'est ici qu'on force le texte à être plus petit et on remonte tout vers le haut
+# --- 2. LE STYLE (CSS) AJUSTÉ ---
 hide_streamlit_style = """
             <style>
-            /* Cache les menus et barres techniques */
+            /* Cache les menus techniques */
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
@@ -22,26 +21,26 @@ hide_streamlit_style = """
             [data-testid="stDecoration"] {display: none !important;}
             [data-testid="stStatusWidget"] {display: none !important;}
 
-            /* REMONTER LE CONTENU (Supprime le vide en haut) */
+            /* REMONTER LE CONTENU */
             .block-container {
                 padding-top: 2rem !important;
                 padding-bottom: 1rem !important;
             }
 
-            /* RÉDUIRE LE TITRE (L'Écho) */
+            /* LE TITRE (L'Écho) -> C'est ici que j'ai grossi la taille */
             h1 {
-                font-size: 2rem !important; /* Taille réduite */
+                font-size: 2.5rem !important; /* Passé de 2.0 à 2.5 (un peu plus gros) */
                 margin-bottom: 0rem !important;
             }
 
-            /* RÉDUIRE LA CITATION */
+            /* LA CITATION (Reste petite) */
             h2 {
-                font-size: 1.2rem !important; /* Beaucoup plus petit */
-                font-weight: 400 !important; /* Moins gras */
+                font-size: 1.2rem !important; 
+                font-weight: 400 !important;
                 margin-top: 0.5rem !important;
             }
             
-            /* RÉDUIRE LES ESPACES ENTRE LES LIGNES */
+            /* RÉDUIRE ESPACES LIGNES */
             .stMarkdown {
                 margin-bottom: -10px;
             }
@@ -71,12 +70,11 @@ try:
 except:
     api_key = st.sidebar.text_input("Clé API", type="password")
 
-# --- 5. AFFICHAGE COMPACT ---
+# --- 5. AFFICHAGE ---
 st.title(f"{coeur_du_jour} L'Écho")
 
 if api_key:
     pensee = generer_pensee_du_jour(datetime.date.today(), api_key)
-    # On affiche la pensée en h2 (taille réduite par le style plus haut)
     st.header(f"✨ {pensee}")
 else:
     st.subheader("Le miroir qui transforme ta journée.")
@@ -84,7 +82,6 @@ else:
 st.write("---") 
 
 # --- 6. JOURNAL ---
-# On enlève le titre "Comment te sens-tu" pour gagner de la place, on le met dans le placeholder
 user_input = st.text_area("Ton espace", height=120, placeholder="Comment te sens-tu aujourd'hui ? Écris-le ici...")
 
 if st.button("💌 Recevoir ma réponse"):
