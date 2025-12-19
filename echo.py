@@ -7,9 +7,10 @@ liste_coeurs = ["🧡", "❤️", "💖", "💗", "💓", "💝", "🤍", "❤�
 jour_actuel = datetime.date.today().toordinal()
 coeur_du_jour = liste_coeurs[jour_actuel % len(liste_coeurs)]
 
-st.set_page_config(page_title="L'Écho", page_icon=coeur_du_jour)
+# Changement du nom dans l'onglet du navigateur
+st.set_page_config(page_title="L'Écho de ton coeur", page_icon=coeur_du_jour)
 
-# --- 2. LE STYLE (CSS) AJUSTÉ ---
+# --- 2. LE STYLE (CSS) ---
 hide_streamlit_style = """
             <style>
             /* Cache les menus techniques */
@@ -27,20 +28,21 @@ hide_streamlit_style = """
                 padding-bottom: 1rem !important;
             }
 
-            /* LE TITRE (L'Écho) -> C'est ici que j'ai grossi la taille */
+            /* LE TITRE */
             h1 {
-                font-size: 2.5rem !important; /* Passé de 2.0 à 2.5 (un peu plus gros) */
+                font-size: 2.5rem !important; /* Taille un peu plus grosse (14 approx) */
                 margin-bottom: 0rem !important;
+                line-height: 1.2 !important; /* Évite que les lignes se touchent trop si ça passe sur 2 lignes */
             }
 
-            /* LA CITATION (Reste petite) */
+            /* LA CITATION */
             h2 {
                 font-size: 1.2rem !important; 
                 font-weight: 400 !important;
                 margin-top: 0.5rem !important;
             }
             
-            /* RÉDUIRE ESPACES LIGNES */
+            /* AJUSTEMENT MARGES */
             .stMarkdown {
                 margin-bottom: -10px;
             }
@@ -70,8 +72,8 @@ try:
 except:
     api_key = st.sidebar.text_input("Clé API", type="password")
 
-# --- 5. AFFICHAGE ---
-st.title(f"{coeur_du_jour} L'Écho")
+# --- 5. AFFICHAGE DU NOUVEAU TITRE ---
+st.title(f"{coeur_du_jour} L'Écho de ton coeur")
 
 if api_key:
     pensee = generer_pensee_du_jour(datetime.date.today(), api_key)
